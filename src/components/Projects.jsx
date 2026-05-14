@@ -81,6 +81,30 @@ export default function Projects() {
         timeline: 'Ongoing project (Started in 2024)',
       },
     },
+    {
+      id: 4,
+      title: 'Agricultural Drone Image Analysis',
+      description:
+        'A comprehensive image analysis system designed for agricultural drones. Integrates advanced object detection and classification models to monitor crops.',
+      image: '/projects/drone-analysis.png',
+      tech: ['Python', 'Jupyter Notebook', 'Deep Learning', 'Computer Vision', 'YOLO', 'ResNet'],
+      github: 'https://github.com/Vinod2127/AGRICULTURAL-DRONE-IMAGE-ANALYSIS.git',
+      fullSummary: {
+        overview: 'An advanced computer vision project that leverages drone imagery to perform detailed agricultural analysis, combining both localization and classification capabilities.',
+        challenge: 'Large-scale farms require efficient and automated methods to monitor crop health and detect issues early across vast areas, which is difficult manually.',
+        solution: 'Developed a system utilizing Jupyter Notebooks to process and analyze high-resolution drone images. The system incorporates deep learning models (YOLO and ResNet) to identify and classify specific agricultural features, such as crop diseases or anomalies.',
+        features: [
+          'Processing of high-resolution drone imagery',
+          'Integration of object detection (YOLO)',
+          'Integration of image classification (ResNet)',
+          'Comprehensive Jupyter Notebook workflows',
+          'Data visualization and feature highlighting',
+          'Designed for precision agriculture',
+        ],
+        impact: 'Provides farmers and agronomists with actionable insights from aerial data, facilitating early intervention and optimizing crop yields.',
+        timeline: 'Completed (2024)',
+      },
+    },
   ]
 
   const containerVariants = {
