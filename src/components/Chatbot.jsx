@@ -5,12 +5,20 @@ import { X, MessageSquare, Send, RotateCcw } from 'lucide-react'
 // ── Local smart chatbot — no API key needed ──────────────────────────────────
 const RESPONSES = [
   {
-    patterns: ['hi', 'hello', 'hey', 'greetings', 'morning', 'evening'],
-    answer: `Hi there! I'm Vinod's AI assistant. I can tell you all about his projects, skills, and background. What would you like to know?`
+    patterns: ['research', 'paper', 'publication', 'publish', 'journal', 'conference', 'ic3se'],
+    answer: `I published a research paper titled "Automated Disease Detection Using ResNet9 and YOLOv8" at IC3SE-2025 (currently under publication). The paper covers automated plant disease detection using deep learning models. You can view the certificate on my Google Drive.`
   },
   {
-    patterns: ['who', 'about', 'introduce', 'tell me', 'yourself', 'vinod', 'nalajala', 'self intro', 'introduction', 'intro'],
-    answer: `I'm a final-year B.Tech IT student from Vijayawada, India, passionate about AI/ML and full-stack development. I've built projects in computer vision, home automation, and agricultural tech — with a research publication to my name. I'm actively looking for Software Developer, Full Stack, Python Developer, or ML Engineer roles.`
+    patterns: ['brain', 'tumor', 'efficientnet', 'gradcam', 'grad-cam', 'medical'],
+    answer: `My Brain Tumor Detection project uses the EfficientNet-B3 deep learning model with Grad-CAM for explainability — achieving 96% accuracy. It's deployed via Flask and visually highlights tumor regions. Check it out: github.com/Vinod2127/Brain-Tumor-Prediction-With-Explainable-AI`
+  },
+  {
+    patterns: ['drone', 'agricultural', 'agriculture', 'yolo', 'resnet'],
+    answer: `My Agricultural Drone Image Analysis project uses YOLO for object detection and ResNet for classification on drone imagery. It's designed to help detect crop health issues from aerial images. GitHub: github.com/Vinod2127/AGRICULTURAL-DRONE-IMAGE-ANALYSIS`
+  },
+  {
+    patterns: ['home', 'automation', 'iot', 'esp', 'alexa', 'blynk', 'voice'],
+    answer: `I built a Voice-Controlled Home Automation system using ESP8266, integrated with Amazon Alexa and the Blynk IoT platform. It allows voice commands to control home appliances remotely. This is a private project.`
   },
   {
     patterns: ['project', 'built', 'work', 'made', 'created', 'developed', 'portfolio'],
@@ -25,10 +33,6 @@ const RESPONSES = [
     answer: `Yes! I am actively seeking opportunities as a Software Developer, Full Stack Developer, Python Developer, or ML Engineer. I'm open to both internships and full-time roles. Feel free to reach out at nalajalavinod@gmail.com or connect with me on LinkedIn!`
   },
   {
-    patterns: ['research', 'paper', 'publication', 'publish', 'journal', 'conference', 'ic3se'],
-    answer: `I published a research paper titled "Automated Disease Detection Using ResNet9 and YOLOv8" at IC3SE-2025 (currently under publication). The paper covers automated plant disease detection using deep learning models. You can view the certificate on my Google Drive.`
-  },
-  {
     patterns: ['education', 'study', 'college', 'university', 'degree', 'cgpa', 'gpa', 'btech', 'b.tech', 'academic'],
     answer: `I am pursuing B.Tech in Information Technology at Kalasalingam Academy of Research and Education with a CGPA of 8.18/10 (2022–2026). I scored 78.3% in Intermediate at GDMM Junior College and a perfect 100% in SSC at Sri Chaitanya Techno School.`
   },
@@ -37,20 +41,12 @@ const RESPONSES = [
     answer: `You can reach me through:\n\n📧 Email: nalajalavinod@gmail.com\n📱 Phone: +91 9505387364\n💼 LinkedIn: linkedin.com/in/vinod-nalajala-a7264b268\n🐙 GitHub: github.com/Vinod2127\n📍 Location: Vijayawada, Andhra Pradesh, India`
   },
   {
-    patterns: ['brain', 'tumor', 'efficientnet', 'gradcam', 'grad-cam', 'medical'],
-    answer: `My Brain Tumor Detection project uses the EfficientNet-B3 deep learning model with Grad-CAM for explainability — achieving 96% accuracy. It's deployed via Flask and visually highlights tumor regions. Check it out: github.com/Vinod2127/Brain-Tumor-Prediction-With-Explainable-AI`
+    patterns: ['who', 'about', 'introduce', 'yourself', 'vinod', 'nalajala', 'self intro', 'introduction', 'intro'],
+    answer: `I'm a final-year B.Tech IT student from Vijayawada, India, passionate about AI/ML and full-stack development. I've built projects in computer vision, home automation, and agricultural tech — with a research publication to my name. I'm actively looking for Software Developer, Full Stack, Python Developer, or ML Engineer roles.`
   },
   {
-    patterns: ['drone', 'agricultural', 'agriculture', 'yolo', 'resnet'],
-    answer: `My Agricultural Drone Image Analysis project uses YOLO for object detection and ResNet for classification on drone imagery. It's designed to help detect crop health issues from aerial images. GitHub: github.com/Vinod2127/AGRICULTURAL-DRONE-IMAGE-ANALYSIS`
-  },
-  {
-    patterns: ['certification', 'certificate', 'codechef', 'course'],
-    answer: `I hold a Database Management Systems (DBMS) certification from CodeChef. You can verify it at: codechef.com/certificates/public/582f3b9`
-  },
-  {
-    patterns: ['home', 'automation', 'iot', 'esp', 'alexa', 'blynk', 'voice'],
-    answer: `I built a Voice-Controlled Home Automation system using ESP8266, integrated with Amazon Alexa and the Blynk IoT platform. It allows voice commands to control home appliances remotely. This is a private project.`
+    patterns: ['hi', 'hello', 'hey', 'greetings', 'morning', 'evening'],
+    answer: `Hi there! I'm Vinod's AI assistant. I can tell you all about his projects, skills, and background. What would you like to know?`
   },
 ]
 
