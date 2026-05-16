@@ -1,11 +1,19 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, MessageSquare, Send } from 'lucide-react'
+import { X, MessageSquare, Send, RotateCcw } from 'lucide-react'
 
 // ── Local smart chatbot — no API key needed ──────────────────────────────────
 const RESPONSES = [
   {
-    patterns: ['project', 'built', 'work', 'made', 'created', 'developed'],
+    patterns: ['hi', 'hello', 'hey', 'greetings', 'morning', 'evening'],
+    answer: `Hi there! I'm Vinod's AI assistant. I can tell you all about his projects, skills, and background. What would you like to know?`
+  },
+  {
+    patterns: ['who', 'about', 'introduce', 'tell me', 'yourself', 'vinod', 'nalajala', 'self intro', 'introduction', 'intro'],
+    answer: `I'm a final-year B.Tech IT student from Vijayawada, India, passionate about AI/ML and full-stack development. I've built projects in computer vision, home automation, and agricultural tech — with a research publication to my name. I'm actively looking for Software Developer, Full Stack, Python Developer, or ML Engineer roles.`
+  },
+  {
+    patterns: ['project', 'built', 'work', 'made', 'created', 'developed', 'portfolio'],
     answer: `I have built 4 impressive projects:\n\n1. 🧠 Explainable Brain Tumor Detection — EfficientNet-B3 + Grad-CAM, 96% accuracy\n2. 🌿 Plant Disease Detection — YOLOv8 + ResNet9 (published at IC3SE-2025)\n3. 🏠 Voice-Controlled Home Automation — ESP8266 + Alexa\n4. 🚁 Agricultural Drone Image Analysis — Python, YOLO, ResNet\n\nWould you like details on any specific project?`
   },
   {
@@ -13,7 +21,7 @@ const RESPONSES = [
     answer: `My technical skills include:\n\n💻 Languages: Python, SQL, JavaScript\n🌐 Web: HTML, CSS, React.js, Flask\n🔧 Core: OOPs, DBMS, REST APIs, Data Structures\n🛠️ Tools: Git, VS Code, Google Colab, Arduino IDE`
   },
   {
-    patterns: ['intern', 'job', 'hire', 'opportunity', 'open', 'available', 'recruit', 'position'],
+    patterns: ['intern', 'job', 'hire', 'opportunity', 'open', 'available', 'recruit', 'position', 'work'],
     answer: `Yes! I am actively seeking opportunities as a Software Developer, Full Stack Developer, Python Developer, or ML Engineer. I'm open to both internships and full-time roles. Feel free to reach out at nalajalavinod@gmail.com or connect with me on LinkedIn!`
   },
   {
@@ -39,10 +47,6 @@ const RESPONSES = [
   {
     patterns: ['certification', 'certificate', 'codechef', 'course'],
     answer: `I hold a Database Management Systems (DBMS) certification from CodeChef. You can verify it at: codechef.com/certificates/public/582f3b9`
-  },
-  {
-    patterns: ['who', 'about', 'introduce', 'tell me', 'yourself', 'vinod', 'nalajala'],
-    answer: `I'm a final-year B.Tech IT student from Vijayawada, India, passionate about AI/ML and full-stack development. I've built projects in computer vision, home automation, and agricultural tech — with a research publication to my name. I'm actively looking for Software Developer, Full Stack, Python Developer, or ML Engineer roles.`
   },
   {
     patterns: ['home', 'automation', 'iot', 'esp', 'alexa', 'blynk', 'voice'],
@@ -140,12 +144,22 @@ export default function Chatbot() {
                   <p className="text-xs text-gray-400">Online</p>
                 </div>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-2 text-gray-400 hover:text-white transition-colors"
-              >
-                <X size={20} />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setMessages([])}
+                  className="p-2 text-gray-400 hover:text-white transition-colors flex items-center gap-1 text-xs font-medium"
+                  title="New Chat"
+                >
+                  <RotateCcw size={16} />
+                  <span className="hidden sm:inline">New Chat</span>
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 text-gray-400 hover:text-white transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
