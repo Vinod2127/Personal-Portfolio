@@ -4,14 +4,15 @@ A modern, fully responsive, and animated personal portfolio website built with R
 
 ## 🚀 Features
 
-- ✨ **Smooth Animations** - Framer Motion animations on scroll
-- 📱 **Fully Responsive** - Mobile, tablet, and desktop optimized
-- 🎨 **Modern Design** - Dark theme with glassmorphism effects
-- 🔗 **Smooth Navigation** - React Scroll for seamless section navigation
-- 📧 **Contact Form** - EmailJS integration for no-backend contact
-- ⚡ **High Performance** - Vite for fast builds and development
-- 🎯 **SEO Ready** - Meta tags and semantic HTML
-- 🚀 **Zero Config Deployment** - Ready for Vercel or Netlify
+- 🤖 **Interactive Smart Chatbot** - Keyword-based AI assistant (extensible to Gemini) for instant answers
+- ✨ **Smooth Animations** - State-of-the-art Framer Motion scroll and hover effects
+- 🖱️ **Custom Cursor** - Sophisticated, animated cursor with trailing effect for premium UX
+- 🔍 **Project Deep Dives** - Detailed modals for every project with challenges, solutions, and impact
+- 📱 **Fully Responsive** - Flawless experience across mobile, tablet, and desktop
+- 🎨 **Modern Design** - Dark theme with glassmorphism and high-fidelity aesthetics
+- 🔗 **Smooth Navigation** - React Scroll for seamless single-page transition
+- 📧 **Contact Form** - EmailJS integration for reliable, no-backend communication
+- ⚡ **High Performance** - Powered by Vite for lightning-fast load times
 
 ## 📋 Table of Contents
 
@@ -26,10 +27,11 @@ A modern, fully responsive, and animated personal portfolio website built with R
 - **Frontend Framework:** React.js 18+
 - **Build Tool:** Vite
 - **Styling:** Tailwind CSS
-- **Animations:** Framer Motion
+- **Animations:** Framer Motion (Transitions, Hover, Scroll-triggered)
+- **Icons:** Lucide React
+- **Chatbot:** Custom React component with keyword-matching (Gemini-ready)
 - **Navigation:** React Scroll
 - **Contact Form:** EmailJS
-- **Icons:** Lucide React
 - **Deployment:** Vercel / Netlify
 
 ## ⚡ Getting Started
@@ -161,28 +163,30 @@ Create a template with these variables:
 ```
 portfolio/
 ├── public/
-│   └── resume.pdf          # Your resume (add here)
+│   └── resume.pdf          # Your resume
 ├── src/
 │   ├── components/
 │   │   ├── Navbar.jsx      # Navigation bar
 │   │   ├── Hero.jsx        # Hero section with typewriter
 │   │   ├── About.jsx       # About & education timeline
 │   │   ├── Skills.jsx      # Skills & technologies
-│   │   ├── Projects.jsx    # Project showcase
+│   │   ├── Projects.jsx    # Project showcase with interactive modals
 │   │   ├── Publications.jsx # Publications & certifications
-│   │   ├── Contact.jsx     # Contact form
+│   │   ├── Contact.jsx     # Contact form (EmailJS)
+│   │   ├── Chatbot.jsx     # Interactive AI Chatbot
+│   │   ├── CustomCursor.jsx # Animated custom cursor
 │   │   └── Footer.jsx      # Footer
 │   ├── hooks/
 │   │   └── useInView.js    # Custom intersection observer hook
-│   ├── App.jsx             # Main app component
+│   ├── App.jsx             # Main app component (Init EmailJS)
 │   ├── main.jsx            # Entry point
-│   └── index.css           # Global styles
+│   └── index.css           # Global styles & design system
+├── .env                    # Environment variables (ignored by git)
+├── .env.example            # Template for environment variables
 ├── index.html              # HTML template
 ├── vite.config.js          # Vite configuration
 ├── tailwind.config.js      # Tailwind CSS config
-├── postcss.config.js       # PostCSS config
 ├── package.json            # Dependencies
-├── .gitignore              # Git ignore rules
 └── README.md               # This file
 ```
 
@@ -259,6 +263,25 @@ For questions or issues, feel free to reach out:
 - 📧 Email: nalajalavinod@gmail.com
 - 💼 LinkedIn: [Vinod Nalajala](http://www.linkedin.com/in/vinod-nalajala-a7264b268)
 - 🐙 GitHub: [Vinod2127](https://github.com/Vinod2127)
+
+---
+
+## 🛠️ Detailed Projects Breakdown
+
+### 1. Explainable Brain Tumor Detection
+- **Tech:** Python, EfficientNet-B3, Flask, Grad-CAM
+- **Goal:** Classify MRI scans with 96% accuracy and provide visual explanations using Grad-CAM.
+- **Link:** [GitHub Repo](https://github.com/Vinod2127/Brain-Tumor-Prediction-With-Explainable-AI)
+
+### 2. Plant Disease Detection
+- **Tech:** Python, YOLOv8, ResNet9, Computer Vision
+- **Goal:** Real-time localization and classification of leaf diseases, published at IC3SE-2025.
+- **Link:** [GitHub Repo](https://github.com/Vinod2127/Leaf-Disease-Prediction-Using-ResNet9-and-YOLOv8.git)
+
+### 3. Agricultural Drone Image Analysis
+- **Tech:** Python, YOLO, ResNet, Jupyter
+- **Goal:** Analyze high-resolution drone imagery for precision agriculture and crop health monitoring.
+- **Link:** [GitHub Repo](https://github.com/Vinod2127/AGRICULTURAL-DRONE-IMAGE-ANALYSIS.git)
 
 ---
 

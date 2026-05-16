@@ -7,6 +7,8 @@ import Projects from './components/Projects'
 import Publications from './components/Publications'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import Chatbot from './components/Chatbot'
+import CustomCursor from './components/CustomCursor'
 import emailjs from 'emailjs-com'
 
 function App() {
@@ -17,6 +19,7 @@ function App() {
 
   return (
     <div className="bg-dark min-h-screen">
+      <CustomCursor />
       <Navbar />
       <Hero />
       <About />
@@ -25,6 +28,7 @@ function App() {
       <Publications />
       <Contact />
       <Footer />
+      <Chatbot />
     </div>
   )
 }

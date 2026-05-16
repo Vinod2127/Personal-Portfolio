@@ -1,13 +1,213 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Github, Linkedin, Mail, ChevronDown } from 'lucide-react'
 import { Link } from 'react-scroll'
+
+const ParticleCanvas = ({ extraParticles, mousePos }) => {
+  const canvasRef = useRef(null)
+  const animationRef = useRef(null)
+  const particlesRef = useRef([])
+  const mousePosRef = useRef(mousePos)
+
+  // Keep mousePos ref in sync without re-running effect
+  useEffect(() => {
+    mousePosRef.current = mousePos
+  }, [mousePos])
+
+  // Merge in any new burst particles from parent
+  useEffect(() => {
+    if (extraParticles && extraParticles.length > 0) {
+      particlesRef.current = [...particlesRef.current, ...extraParticles]
+    }
+  }, [extraParticles])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    resizeCanvas()
+    window.addEventListener('resize', resizeCanvas)
+
+    // Seed initial ambient particles
+    particlesRef.current = Array.from({ length: 5 }, () => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      size: Math.random() * 3 + 2,
+      life: 1,
+      hue: Math.random() * 60 + 180
+    }))
+
+    const animateParticles = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const mp = mousePosRef.current
+
+      particlesRef.current = particlesRef.current
+        .map(p => {
+          let { x, y, vx, vy, hue, life, size } = p
+          const dist = Math.hypot(x - mp.x, y - mp.y)
+          if (dist < 100) {
+            const angle = Math.atan2(y - mp.y, x - mp.x)
+            vx += Math.cos(angle) * 0.3
+            vy += Math.sin(angle) * 0.3
+          }
+          x += vx; y += vy
+          vx *= 0.98; vy *= 0.98
+          if (x < 0) x = canvas.width
+          if (x > canvas.width) x = 0
+          if (y < 0) y = canvas.height
+          if (y > canvas.height) y = 0
+          hue = (hue + 1) % 360
+          life -= 0.005
+          return { x, y, vx, vy, hue, life, size }
+        })
+        .filter(p => p.life > 0)
+
+      particlesRef.current.forEach(p => {
+        ctx.fillStyle = `hsla(${p.hue}, 100%, 50%, ${p.life})`
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+        ctx.fill()
+      })
+
+      animationRef.current = requestAnimationFrame(animateParticles)
+    }
+
+    animateParticles()
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas)
+      cancelAnimationFrame(animationRef.current)
+    }
+  }, [])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 pointer-events-none"
+      style={{ zIndex: 1 }}
+    />
+  )
+}
+
+const WireframeShape = ({ mouseVelocity }) => {
+  const canvasRef = useRef(null)
+  const rotationRef = useRef({ x: 0, y: 0, z: 0 })
+
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (isMobile || prefersReducedMotion) return
+
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    canvas.width = 400
+    canvas.height = 400
+
+    const phi = (1 + Math.sqrt(5)) / 2
+    const vertices = [
+      [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
+      [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
+      [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
+    ]
+
+    const edges = [
+      [0, 1], [0, 5], [0, 7], [0, 11], [1, 5], [1, 7], [1, 9],
+      [2, 3], [2, 4], [2, 6], [2, 11], [3, 4], [3, 6], [3, 9],
+      [4, 5], [4, 9], [5, 11], [6, 7], [6, 10], [7, 10], [8, 9],
+      [8, 10], [10, 11], [1, 9], [3, 9], [8, 9]
+    ]
+
+    const animate = () => {
+      rotationRef.current.x += 0.003 + mouseVelocity * 0.01
+      rotationRef.current.y += 0.005 + mouseVelocity * 0.01
+      rotationRef.current.z += 0.002
+
+      ctx.fillStyle = '#050a14'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      const rotatedVertices = vertices.map(v => {
+        let [x, y, z] = v
+
+        const cosX = Math.cos(rotationRef.current.x)
+        const sinX = Math.sin(rotationRef.current.x)
+        y = y * cosX - z * sinX
+        z = y * sinX + z * cosX
+
+        const cosY = Math.cos(rotationRef.current.y)
+        const sinY = Math.sin(rotationRef.current.y)
+        x = x * cosY + z * sinY
+        z = -x * sinY + z * cosY
+
+        const cosZ = Math.cos(rotationRef.current.z)
+        const sinZ = Math.sin(rotationRef.current.z)
+        const tempX = x * cosZ - y * sinZ
+        y = x * sinZ + y * cosZ
+        x = tempX
+
+        const focalLength = 400
+        const scale = focalLength / (z + 3)
+        const x2d = x * scale + canvas.width / 2
+        const y2d = y * scale + canvas.height / 2
+
+        return { x2d, y2d, z }
+      })
+
+      edges.forEach(([a, b]) => {
+        const v1 = rotatedVertices[a]
+        const v2 = rotatedVertices[b]
+        ctx.strokeStyle = 'rgba(6, 182, 212, 0.15)'
+        ctx.lineWidth = 1
+        ctx.beginPath()
+        ctx.moveTo(v1.x2d, v1.y2d)
+        ctx.lineTo(v2.x2d, v2.y2d)
+        ctx.stroke()
+      })
+
+      rotatedVertices.forEach(v => {
+        ctx.fillStyle = 'rgba(6, 182, 212, 0.3)'
+        ctx.beginPath()
+        ctx.arc(v.x2d, v.y2d, 2, 0, Math.PI * 2)
+        ctx.fill()
+      })
+
+      requestAnimationFrame(animate)
+    }
+
+    animate()
+  }, [mouseVelocity])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute right-0 top-1/2 transform -translate-y-1/2 hidden lg:block"
+      style={{ width: '400px', height: '400px', zIndex: 0 }}
+    />
+  )
+}
 
 export default function Hero() {
   const [displayedText, setDisplayedText] = useState('')
   const roles = ['Software Developer', 'Full Stack Developer', 'ML Engineer']
   const [roleIndex, setRoleIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [burstParticles, setBurstParticles] = useState([])
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [mouseVelocity, setMouseVelocity] = useState(0)
+  const lastMousePosRef = useRef({ x: 0, y: 0 })
+  const heroSectionRef = useRef(null)
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -31,6 +231,40 @@ export default function Hero() {
 
     return () => clearTimeout(timeout)
   }, [displayedText, roleIndex, isDeleting])
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const velocity = Math.hypot(
+        e.clientX - lastMousePosRef.current.x,
+        e.clientY - lastMousePosRef.current.y
+      ) / 16
+      setMouseVelocity(Math.min(velocity, 5))
+      lastMousePosRef.current = { x: e.clientX, y: e.clientY }
+      setMousePos({ x: e.clientX, y: e.clientY })
+    }
+
+    const handleClick = (e) => {
+      if (!heroSectionRef.current || !heroSectionRef.current.contains(e.target)) return
+      const newParticles = Array.from({ length: 8 }, () => ({
+        x: e.clientX,
+        y: e.clientY,
+        vx: (Math.random() - 0.5) * 4,
+        vy: (Math.random() - 0.5) * 4,
+        size: Math.random() * 4 + 2,
+        life: 1,
+        hue: Math.random() * 60 + 180
+      }))
+      setBurstParticles(newParticles)
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('click', handleClick)
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('click', handleClick)
+    }
+  }, [])
 
   const socialLinks = [
     { icon: Github, link: 'https://github.com/Vinod2127', label: 'GitHub' },
@@ -60,32 +294,12 @@ export default function Hero() {
 
   return (
     <section
+      ref={heroSectionRef}
       id="hero"
       className="relative min-h-screen w-full animated-bg flex items-center justify-center overflow-hidden pt-16"
     >
-      {/* Animated particles */}
-      {[...Array(5)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="particle"
-          style={{
-            width: Math.random() * 300 + 100 + 'px',
-            height: Math.random() * 300 + 100 + 'px',
-            left: Math.random() * 100 + '%',
-            top: Math.random() * 100 + '%',
-          }}
-          animate={{
-            y: [0, -100, 0],
-            x: [0, Math.random() * 100 - 50, 0],
-            opacity: [0.3, 0.1, 0.3],
-          }}
-          transition={{
-            duration: Math.random() * 10 + 15,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-        />
-      ))}
+      <ParticleCanvas extraParticles={burstParticles} mousePos={mousePos} />
+      <WireframeShape mouseVelocity={mouseVelocity} />
 
       <motion.div
         className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10"

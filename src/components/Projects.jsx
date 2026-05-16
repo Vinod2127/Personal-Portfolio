@@ -1,8 +1,176 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useRef, useEffect } from 'react'
+import { motion, AnimatePresence, useSpring } from 'framer-motion'
 import { useInView } from '../hooks/useInView'
 import { Github, ExternalLink, Lock, X, Award, Code, Users, Zap } from 'lucide-react'
 
+function ProjectCard({ project, onClick, variants }) {
+  const cardRef = useRef(null)
+  const [isHovered, setIsHovered] = useState(false)
+  const [glarePosition, setGlarePosition] = useState({ x: 50, y: 50 })
+  const [isTouch] = useState(() => 'ontouchstart' in window || navigator.maxTouchPoints > 0)
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const tiltDisabled = isTouch || prefersReducedMotion
+
+  const rotateX = useSpring(0, { stiffness: 300, damping: 20 })
+  const rotateY = useSpring(0, { stiffness: 300, damping: 20 })
+  const scale = useSpring(1, { stiffness: 300, damping: 20 })
+
+  const handleMouseMove = (e) => {
+    if (tiltDisabled || !cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+    rotateX.set(((e.clientY - centerY) / (rect.height / 2)) * -12)
+    rotateY.set(((e.clientX - centerX) / (rect.width / 2)) * 12)
+    setGlarePosition({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100,
+    })
+  }
+
+  const handleMouseEnter = () => {
+    if (tiltDisabled) return
+    scale.set(1.03)
+    setIsHovered(true)
+  }
+
+  const handleMouseLeave = () => {
+    if (tiltDisabled) return
+    rotateX.set(0)
+    rotateY.set(0)
+    scale.set(1)
+    setIsHovered(false)
+  }
+
+  return (
+    <motion.div
+      ref={cardRef}
+      variants={variants}
+      className="glass rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-blue-500/20 transition-shadow duration-300 cursor-pointer group relative"
+      style={{
+        rotateX: tiltDisabled ? 0 : rotateX,
+        rotateY: tiltDisabled ? 0 : rotateY,
+        scale: tiltDisabled ? 1 : scale,
+        transformPerspective: 1000,
+        transformStyle: 'preserve-3d',
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={() => onClick(project)}
+    >
+      {/* Glare overlay */}
+      {isHovered && !tiltDisabled && (
+        <div
+          className="absolute inset-0 pointer-events-none z-10"
+          style={{
+            background: `radial-gradient(circle at ${glarePosition.x}% ${glarePosition.y}%, rgba(255,255,255,0.15) 0%, transparent 60%)`,
+          }}
+        />
+      )}
+
+      {/* Project Image */}
+      <div className="relative h-48 overflow-hidden">
+        <motion.img
+          src={project.image}
+          alt={project.title}
+          className="w-full h-full object-cover"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+          <span className="text-white text-sm font-semibold">Click to view details</span>
+        </div>
+        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+          {project.github && !project.private && (
+            <motion.a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+              className="p-3 bg-primary rounded-full hover:bg-secondary transition-colors"
+            >
+              <Github size={24} className="text-white" />
+            </motion.a>
+          )}
+          <motion.a
+            href={project.github || '#'}
+            target="_blank"
+            rel="noopener noreferrer"
+            disabled={project.private}
+            onClick={(e) => {
+              e.stopPropagation()
+              if (project.private) e.preventDefault()
+            }}
+            whileHover={!project.private ? { scale: 1.2 } : {}}
+            whileTap={!project.private ? { scale: 0.9 } : {}}
+            className={`p-3 rounded-full ${
+              project.private ? 'bg-gray-600 cursor-not-allowed' : 'bg-primary hover:bg-secondary'
+            } transition-colors`}
+          >
+            {project.private ? (
+              <Lock size={24} className="text-white" />
+            ) : (
+              <ExternalLink size={24} className="text-white" />
+            )}
+          </motion.a>
+        </div>
+      </div>
+
+      {/* Project Info */}
+      <div className="p-6">
+        <div className="flex items-start justify-between mb-3">
+          <h3 className="text-xl font-bold text-white flex-1">{project.title}</h3>
+          {project.private && (
+            <span className="ml-2 px-2 py-1 bg-red-500/20 text-red-300 text-xs font-semibold rounded">
+              Private
+            </span>
+          )}
+        </div>
+
+        <p className="text-gray-300 text-sm mb-4 line-clamp-3">{project.description}</p>
+
+        <div className="flex flex-wrap gap-2 mb-4">
+          {project.tech.map((tech) => (
+            <span key={tech} className="px-2 py-1 text-xs bg-blue-500/20 text-blue-300 rounded font-semibold">
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        <div className="flex items-center justify-between">
+          {project.github && !project.private && (
+            <motion.a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors font-semibold"
+            >
+              <Github size={18} />
+              View on GitHub
+            </motion.a>
+          )}
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              onClick(project)
+            }}
+            className="ml-auto text-primary hover:text-secondary transition-colors font-semibold text-sm"
+          >
+            View Details →
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+// ─── Main Projects Component ──────────────────────────────────────────────────
 export default function Projects() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 })
   const [selectedProject, setSelectedProject] = useState(null)
@@ -17,9 +185,12 @@ export default function Projects() {
       tech: ['Python', 'EfficientNet-B3', 'Flask', 'Grad-CAM', 'Deep Learning'],
       github: 'https://github.com/Vinod2127/Brain-Tumor-Prediction-With-Explainable-AI',
       fullSummary: {
-        overview: 'An AI-powered medical imaging system for detecting brain tumors from MRI scans with high accuracy and explainability.',
-        challenge: 'Medical AI requires both high accuracy and interpretability. Traditional deep learning models often act as "black boxes," making it difficult for radiologists to trust and understand the predictions.',
-        solution: 'Developed an EfficientNet-B3 deep learning model trained on diverse MRI datasets, achieving 96% validation accuracy. Integrated Grad-CAM (Gradient-weighted Class Activation Mapping) to visualize which regions of the MRI the model focuses on during prediction, providing explainability.',
+        overview:
+          'An AI-powered medical imaging system for detecting brain tumors from MRI scans with high accuracy and explainability.',
+        challenge:
+          'Medical AI requires both high accuracy and interpretability. Traditional deep learning models often act as "black boxes," making it difficult for radiologists to trust and understand the predictions.',
+        solution:
+          'Developed an EfficientNet-B3 deep learning model trained on diverse MRI datasets, achieving 96% validation accuracy. Integrated Grad-CAM (Gradient-weighted Class Activation Mapping) to visualize which regions of the MRI the model focuses on during prediction, providing explainability.',
         features: [
           'EfficientNet-B3 architecture with transfer learning',
           '96% accuracy on validation dataset',
@@ -28,7 +199,8 @@ export default function Projects() {
           'Supports multiple input formats',
           'Fast processing (<100ms per image)',
         ],
-        impact: 'Enables radiologists to make informed decisions by understanding AI predictions. Can assist in early tumor detection, potentially improving patient outcomes.',
+        impact:
+          'Enables radiologists to make informed decisions by understanding AI predictions. Can assist in early tumor detection, potentially improving patient outcomes.',
         timeline: '3 months (Data collection, Model training, Integration)',
       },
     },
@@ -41,9 +213,12 @@ export default function Projects() {
       tech: ['Python', 'YOLOv8', 'ResNet9', 'Computer Vision', 'ML'],
       github: 'https://github.com/Vinod2127/Leaf-Disease-Prediction-Using-ResNet9-and-YOLOv8.git',
       fullSummary: {
-        overview: 'A computer vision system that detects plant diseases in real-time using object detection and classification, published at IC3SE-2025.',
-        challenge: 'Farmers need a quick, accurate way to identify plant diseases early to prevent crop loss. Manual inspection is time-consuming and requires expertise.',
-        solution: 'Combined YOLOv8 for precise disease localization on leaves with ResNet9 for accurate disease classification. This two-stage approach provides both detection and classification in a single inference.',
+        overview:
+          'A computer vision system that detects plant diseases in real-time using object detection and classification, published at IC3SE-2025.',
+        challenge:
+          'Farmers need a quick, accurate way to identify plant diseases early to prevent crop loss. Manual inspection is time-consuming and requires expertise.',
+        solution:
+          'Combined YOLOv8 for precise disease localization on leaves with ResNet9 for accurate disease classification. This two-stage approach provides both detection and classification in a single inference.',
         features: [
           'YOLOv8 for real-time object detection',
           'ResNet9 for disease classification',
@@ -52,7 +227,8 @@ export default function Projects() {
           'Confidence scores for predictions',
           'Web interface for easy access',
         ],
-        impact: 'Helps farmers detect diseases early, reducing crop losses by up to 30%. Published research contributes to advancing agricultural AI technology.',
+        impact:
+          'Helps farmers detect diseases early, reducing crop losses by up to 30%. Published research contributes to advancing agricultural AI technology.',
         timeline: '4 months (Research, Model development, Testing, Publication)',
       },
     },
@@ -66,9 +242,12 @@ export default function Projects() {
       github: null,
       private: true,
       fullSummary: {
-        overview: 'An intelligent home automation system that integrates voice control through Amazon Alexa with remote monitoring capabilities.',
-        challenge: 'Modern homes require seamless control of multiple devices from anywhere. Users want convenience, security, and real-time monitoring.',
-        solution: 'Built a system using ESP8266 microcontrollers networked with Alexa for voice commands and Blynk for remote monitoring. Enables users to control lights, fans, appliances, and track their status in real-time.',
+        overview:
+          'An intelligent home automation system that integrates voice control through Amazon Alexa with remote monitoring capabilities.',
+        challenge:
+          'Modern homes require seamless control of multiple devices from anywhere. Users want convenience, security, and real-time monitoring.',
+        solution:
+          'Built a system using ESP8266 microcontrollers networked with Alexa for voice commands and Blynk for remote monitoring. Enables users to control lights, fans, appliances, and track their status in real-time.',
         features: [
           'Voice control via Amazon Alexa',
           'Remote monitoring through Blynk app',
@@ -77,7 +256,8 @@ export default function Projects() {
           'Automated scheduling capabilities',
           'Low-power consumption design',
         ],
-        impact: 'Provides home owners with a cost-effective smart home solution. Improves quality of life and energy efficiency.',
+        impact:
+          'Provides home owners with a cost-effective smart home solution. Improves quality of life and energy efficiency.',
         timeline: 'Ongoing project (Started in 2024)',
       },
     },
@@ -90,9 +270,12 @@ export default function Projects() {
       tech: ['Python', 'Jupyter Notebook', 'Deep Learning', 'Computer Vision', 'YOLO', 'ResNet'],
       github: 'https://github.com/Vinod2127/AGRICULTURAL-DRONE-IMAGE-ANALYSIS.git',
       fullSummary: {
-        overview: 'An advanced computer vision project that leverages drone imagery to perform detailed agricultural analysis, combining both localization and classification capabilities.',
-        challenge: 'Large-scale farms require efficient and automated methods to monitor crop health and detect issues early across vast areas, which is difficult manually.',
-        solution: 'Developed a system utilizing Jupyter Notebooks to process and analyze high-resolution drone images. The system incorporates deep learning models (YOLO and ResNet) to identify and classify specific agricultural features, such as crop diseases or anomalies.',
+        overview:
+          'An advanced computer vision project that leverages drone imagery to perform detailed agricultural analysis, combining both localization and classification capabilities.',
+        challenge:
+          'Large-scale farms require efficient and automated methods to monitor crop health and detect issues early across vast areas, which is difficult manually.',
+        solution:
+          'Developed a system utilizing Jupyter Notebooks to process and analyze high-resolution drone images. The system incorporates deep learning models (YOLO and ResNet) to identify and classify specific agricultural features, such as crop diseases or anomalies.',
         features: [
           'Processing of high-resolution drone imagery',
           'Integration of object detection (YOLO)',
@@ -101,7 +284,8 @@ export default function Projects() {
           'Data visualization and feature highlighting',
           'Designed for precision agriculture',
         ],
-        impact: 'Provides farmers and agronomists with actionable insights from aerial data, facilitating early intervention and optimizing crop yields.',
+        impact:
+          'Provides farmers and agronomists with actionable insights from aerial data, facilitating early intervention and optimizing crop yields.',
         timeline: 'Completed (2024)',
       },
     },
@@ -109,21 +293,12 @@ export default function Projects() {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
   }
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8 },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
   }
 
   const modalVariants = {
@@ -152,119 +327,12 @@ export default function Projects() {
             animate={inView ? 'visible' : 'hidden'}
           >
             {projects.map((project) => (
-              <motion.div
+              <ProjectCard
                 key={project.id}
+                project={project}
+                onClick={setSelectedProject}
                 variants={itemVariants}
-                className="glass rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:scale-105 transform cursor-pointer group"
-                whileHover={{ y: -10 }}
-                onClick={() => setSelectedProject(project)}
-              >
-                {/* Project Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <motion.img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                    <span className="text-white text-sm font-semibold">Click to view details</span>
-                  </div>
-                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                    {project.github && !project.private && (
-                      <motion.a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        whileHover={{ scale: 1.2 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-3 bg-primary rounded-full hover:bg-secondary transition-colors"
-                      >
-                        <Github size={24} className="text-white" />
-                      </motion.a>
-                    )}
-                    <motion.a
-                      href={project.github || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      disabled={project.private}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        if (project.private) e.preventDefault()
-                      }}
-                      whileHover={!project.private ? { scale: 1.2 } : {}}
-                      whileTap={!project.private ? { scale: 0.9 } : {}}
-                      className={`p-3 rounded-full ${
-                        project.private
-                          ? 'bg-gray-600 cursor-not-allowed'
-                          : 'bg-primary hover:bg-secondary'
-                      } transition-colors`}
-                    >
-                      {project.private ? (
-                        <Lock size={24} className="text-white" />
-                      ) : (
-                        <ExternalLink size={24} className="text-white" />
-                      )}
-                    </motion.a>
-                  </div>
-                </div>
-
-                {/* Project Info */}
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-xl font-bold text-white flex-1">
-                      {project.title}
-                    </h3>
-                    {project.private && (
-                      <span className="ml-2 px-2 py-1 bg-red-500/20 text-red-300 text-xs font-semibold rounded">
-                        Private
-                      </span>
-                    )}
-                  </div>
-
-                  <p className="text-gray-300 text-sm mb-4 line-clamp-3">
-                    {project.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2 py-1 text-xs bg-blue-500/20 text-blue-300 rounded font-semibold"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    {project.github && !project.private && (
-                      <motion.a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors font-semibold"
-                      >
-                        <Github size={18} />
-                        View on GitHub
-                      </motion.a>
-                    )}
-                    <motion.button
-                      onClick={() => setSelectedProject(project)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="ml-auto text-primary hover:text-secondary transition-colors font-semibold text-sm"
-                    >
-                      View Details →
-                    </motion.button>
-                  </div>
-                </div>
-              </motion.div>
+              />
             ))}
           </motion.div>
         </div>
@@ -326,9 +394,7 @@ export default function Projects() {
                     <Award size={24} className="text-primary" />
                     Overview
                   </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    {selectedProject.fullSummary.overview}
-                  </p>
+                  <p className="text-gray-300 leading-relaxed">{selectedProject.fullSummary.overview}</p>
                 </div>
 
                 {/* Challenge */}
@@ -337,9 +403,7 @@ export default function Projects() {
                     <Zap size={24} className="text-yellow-400" />
                     Challenge
                   </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    {selectedProject.fullSummary.challenge}
-                  </p>
+                  <p className="text-gray-300 leading-relaxed">{selectedProject.fullSummary.challenge}</p>
                 </div>
 
                 {/* Solution */}
@@ -348,9 +412,7 @@ export default function Projects() {
                     <Code size={24} className="text-green-400" />
                     Solution
                   </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    {selectedProject.fullSummary.solution}
-                  </p>
+                  <p className="text-gray-300 leading-relaxed">{selectedProject.fullSummary.solution}</p>
                 </div>
 
                 {/* Features */}
@@ -375,17 +437,13 @@ export default function Projects() {
                     <Users size={24} className="text-secondary" />
                     Impact
                   </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    {selectedProject.fullSummary.impact}
-                  </p>
+                  <p className="text-gray-300 leading-relaxed">{selectedProject.fullSummary.impact}</p>
                 </div>
 
                 {/* Timeline */}
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold text-white mb-3">Timeline</h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    {selectedProject.fullSummary.timeline}
-                  </p>
+                  <p className="text-gray-300 leading-relaxed">{selectedProject.fullSummary.timeline}</p>
                 </div>
 
                 {/* Technologies */}
