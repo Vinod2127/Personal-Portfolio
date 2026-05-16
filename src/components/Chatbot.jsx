@@ -6,51 +6,51 @@ import { X, MessageSquare, Send } from 'lucide-react'
 const RESPONSES = [
   {
     patterns: ['project', 'built', 'work', 'made', 'created', 'developed'],
-    answer: `Vinod has built 4 impressive projects:\n\n1. 🧠 Explainable Brain Tumor Detection — EfficientNet-B3 + Grad-CAM, 96% accuracy\n2. 🌿 Plant Disease Detection — YOLOv8 + ResNet9 (published at IC3SE-2025)\n3. 🏠 Voice-Controlled Home Automation — ESP8266 + Alexa\n4. 🚁 Agricultural Drone Image Analysis — Python, YOLO, ResNet\n\nWant details on any specific project?`
+    answer: `I have built 4 impressive projects:\n\n1. 🧠 Explainable Brain Tumor Detection — EfficientNet-B3 + Grad-CAM, 96% accuracy\n2. 🌿 Plant Disease Detection — YOLOv8 + ResNet9 (published at IC3SE-2025)\n3. 🏠 Voice-Controlled Home Automation — ESP8266 + Alexa\n4. 🚁 Agricultural Drone Image Analysis — Python, YOLO, ResNet\n\nWould you like details on any specific project?`
   },
   {
     patterns: ['skill', 'technology', 'tech', 'know', 'language', 'stack', 'proficient', 'good at'],
-    answer: `Vinod's technical skills include:\n\n💻 Languages: Python, SQL, JavaScript\n🌐 Web: HTML, CSS, React.js, Flask\n🔧 Core: OOPs, DBMS, REST APIs, Data Structures\n🛠️ Tools: Git, VS Code, Google Colab, Arduino IDE`
+    answer: `My technical skills include:\n\n💻 Languages: Python, SQL, JavaScript\n🌐 Web: HTML, CSS, React.js, Flask\n🔧 Core: OOPs, DBMS, REST APIs, Data Structures\n🛠️ Tools: Git, VS Code, Google Colab, Arduino IDE`
   },
   {
     patterns: ['intern', 'job', 'hire', 'opportunity', 'open', 'available', 'recruit', 'position'],
-    answer: `Yes! Vinod is actively seeking opportunities as a Software Developer, Full Stack Developer, Python Developer, or ML Engineer. He's open to both internships and full-time roles. Feel free to reach out at nalajalavinod@gmail.com or connect on LinkedIn!`
+    answer: `Yes! I am actively seeking opportunities as a Software Developer, Full Stack Developer, Python Developer, or ML Engineer. I'm open to both internships and full-time roles. Feel free to reach out at nalajalavinod@gmail.com or connect with me on LinkedIn!`
   },
   {
     patterns: ['research', 'paper', 'publication', 'publish', 'journal', 'conference', 'ic3se'],
-    answer: `Vinod published a research paper titled "Automated Disease Detection Using ResNet9 and YOLOv8" at IC3SE-2025 (currently under publication). The paper covers automated plant disease detection using deep learning models. You can view the certificate on Google Drive.`
+    answer: `I published a research paper titled "Automated Disease Detection Using ResNet9 and YOLOv8" at IC3SE-2025 (currently under publication). The paper covers automated plant disease detection using deep learning models. You can view the certificate on my Google Drive.`
   },
   {
     patterns: ['education', 'study', 'college', 'university', 'degree', 'cgpa', 'gpa', 'btech', 'b.tech', 'academic'],
-    answer: `Vinod is pursuing B.Tech in Information Technology at Kalasalingam Academy of Research and Education with a CGPA of 8.18/10 (2022–2026). He scored 78.3% in Intermediate at GDMM Junior College and a perfect 100% in SSC at Sri Chaitanya Techno School.`
+    answer: `I am pursuing B.Tech in Information Technology at Kalasalingam Academy of Research and Education with a CGPA of 8.18/10 (2022–2026). I scored 78.3% in Intermediate at GDMM Junior College and a perfect 100% in SSC at Sri Chaitanya Techno School.`
   },
   {
     patterns: ['contact', 'email', 'phone', 'reach', 'connect', 'linkedin', 'github', 'social'],
-    answer: `You can reach Vinod through:\n\n📧 Email: nalajalavinod@gmail.com\n📱 Phone: +91 9505387364\n💼 LinkedIn: linkedin.com/in/vinod-nalajala-a7264b268\n🐙 GitHub: github.com/Vinod2127\n📍 Location: Vijayawada, Andhra Pradesh, India`
+    answer: `You can reach me through:\n\n📧 Email: nalajalavinod@gmail.com\n📱 Phone: +91 9505387364\n💼 LinkedIn: linkedin.com/in/vinod-nalajala-a7264b268\n🐙 GitHub: github.com/Vinod2127\n📍 Location: Vijayawada, Andhra Pradesh, India`
   },
   {
     patterns: ['brain', 'tumor', 'efficientnet', 'gradcam', 'grad-cam', 'medical'],
-    answer: `The Brain Tumor Detection project uses EfficientNet-B3 deep learning model with Grad-CAM for explainability — achieving 96% accuracy. It's deployed via Flask and visually highlights tumor regions. Check it out: github.com/Vinod2127/Brain-Tumor-Prediction-With-Explainable-AI`
+    answer: `My Brain Tumor Detection project uses the EfficientNet-B3 deep learning model with Grad-CAM for explainability — achieving 96% accuracy. It's deployed via Flask and visually highlights tumor regions. Check it out: github.com/Vinod2127/Brain-Tumor-Prediction-With-Explainable-AI`
   },
   {
     patterns: ['drone', 'agricultural', 'agriculture', 'yolo', 'resnet'],
-    answer: `The Agricultural Drone Image Analysis project uses YOLO for object detection and ResNet for classification on drone imagery. It's designed to help detect crop health issues from aerial images. GitHub: github.com/Vinod2127/AGRICULTURAL-DRONE-IMAGE-ANALYSIS`
+    answer: `My Agricultural Drone Image Analysis project uses YOLO for object detection and ResNet for classification on drone imagery. It's designed to help detect crop health issues from aerial images. GitHub: github.com/Vinod2127/AGRICULTURAL-DRONE-IMAGE-ANALYSIS`
   },
   {
     patterns: ['certification', 'certificate', 'codechef', 'course'],
-    answer: `Vinod holds a Database Management Systems (DBMS) certification from CodeChef. You can verify it at: codechef.com/certificates/public/582f3b9`
+    answer: `I hold a Database Management Systems (DBMS) certification from CodeChef. You can verify it at: codechef.com/certificates/public/582f3b9`
   },
   {
     patterns: ['who', 'about', 'introduce', 'tell me', 'yourself', 'vinod', 'nalajala'],
-    answer: `Vinod is a final-year B.Tech IT student from Vijayawada, India, passionate about AI/ML and full-stack development. He's built projects in computer vision, home automation, and agricultural tech — with a research publication to his name. He's actively looking for Software Developer, Full Stack, Python Developer, or ML Engineer roles.`
+    answer: `I'm a final-year B.Tech IT student from Vijayawada, India, passionate about AI/ML and full-stack development. I've built projects in computer vision, home automation, and agricultural tech — with a research publication to my name. I'm actively looking for Software Developer, Full Stack, Python Developer, or ML Engineer roles.`
   },
   {
     patterns: ['home', 'automation', 'iot', 'esp', 'alexa', 'blynk', 'voice'],
-    answer: `Vinod built a Voice-Controlled Home Automation system using ESP8266, integrated with Amazon Alexa and the Blynk IoT platform. It allows voice commands to control home appliances remotely. This is a private project.`
+    answer: `I built a Voice-Controlled Home Automation system using ESP8266, integrated with Amazon Alexa and the Blynk IoT platform. It allows voice commands to control home appliances remotely. This is a private project.`
   },
 ]
 
-const DEFAULT_RESPONSE = `I'm not sure about that, but I can help you learn about:\n\n• 📁 Vinod's projects\n• 💡 His skills\n• 🎓 Education background\n• 📄 Research publications\n• 💼 Job opportunities\n• 📬 Contact info\n\nWhat would you like to know?`
+const DEFAULT_RESPONSE = `I'm not sure about that, but I can help you learn about:\n\n• 📁 My projects\n• 💡 My skills\n• 🎓 Education background\n• 📄 Research publications\n• 💼 Job opportunities\n• 📬 Contact info\n\nWhat would you like to know?`
 
 function getLocalReply(text) {
   const lower = text.toLowerCase()
@@ -70,10 +70,10 @@ export default function Chatbot() {
   const messagesEndRef = useRef(null)
 
   const suggestedQuestions = [
-    "What projects has Vinod built?",
-    "What are his top skills?",
-    "Is he open to internships?",
-    "Tell me about his research paper"
+    "What projects have you built?",
+    "What are your top skills?",
+    "Are you open to internships?",
+    "Tell me about your research paper"
   ]
 
   const scrollToBottom = () => {
