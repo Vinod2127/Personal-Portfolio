@@ -200,7 +200,7 @@ const WireframeShape = ({ mouseVelocity }) => {
 
 export default function Hero() {
   const [displayedText, setDisplayedText] = useState('')
-  const roles = ['Software Developer', 'Full Stack Developer', 'ML Engineer']
+  const roles = ['Software Developer', 'Full Stack Developer', 'Python Developer', 'ML Engineer']
   const [roleIndex, setRoleIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
   const [burstParticles, setBurstParticles] = useState([])

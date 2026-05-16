@@ -14,7 +14,7 @@ const RESPONSES = [
   },
   {
     patterns: ['intern', 'job', 'hire', 'opportunity', 'open', 'available', 'recruit', 'position'],
-    answer: `Yes! Vinod is actively seeking opportunities as a Software Developer, Full Stack Developer, or ML Engineer. He's open to both internships and full-time roles. Feel free to reach out at nalajalavinod@gmail.com or connect on LinkedIn!`
+    answer: `Yes! Vinod is actively seeking opportunities as a Software Developer, Full Stack Developer, Python Developer, or ML Engineer. He's open to both internships and full-time roles. Feel free to reach out at nalajalavinod@gmail.com or connect on LinkedIn!`
   },
   {
     patterns: ['research', 'paper', 'publication', 'publish', 'journal', 'conference', 'ic3se'],
@@ -42,7 +42,7 @@ const RESPONSES = [
   },
   {
     patterns: ['who', 'about', 'introduce', 'tell me', 'yourself', 'vinod', 'nalajala'],
-    answer: `Vinod is a final-year B.Tech IT student from Vijayawada, India, passionate about AI/ML and full-stack development. He's built projects in computer vision, home automation, and agricultural tech — with a research publication to his name. He's actively looking for Software Developer, Full Stack, or ML Engineer roles.`
+    answer: `Vinod is a final-year B.Tech IT student from Vijayawada, India, passionate about AI/ML and full-stack development. He's built projects in computer vision, home automation, and agricultural tech — with a research publication to his name. He's actively looking for Software Developer, Full Stack, Python Developer, or ML Engineer roles.`
   },
   {
     patterns: ['home', 'automation', 'iot', 'esp', 'alexa', 'blynk', 'voice'],
